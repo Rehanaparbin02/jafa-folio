@@ -9,8 +9,8 @@ export default function HorizontalTracker() {
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
-            // Update x to the mouse's clientX position
-            x.set(e.clientX);
+            // Center the 600px wide rectangle on the cursor
+            x.set(e.clientX - 300);
         };
 
         window.addEventListener("mousemove", handleMouseMove);
@@ -18,13 +18,10 @@ export default function HorizontalTracker() {
     }, [x]);
 
     return (
-        <div className="relative flex w-full flex-1 items-center overflow-visible min-h-[368px]">
-            {/* Background track line (optional, purely aesthetic to show the path) */}
-            <div className="absolute left-0 right-0 h-px bg-zinc-200 dark:bg-zinc-800" />
-
+        <div className="relative flex w-full items-center overflow-visible">
             <motion.div
+                className="h-[350px] w-[600px] rounded-3xl bg-black shadow-2xl dark:bg-white dark:shadow-[0_20px_50px_rgba(255,255,255,0.1)]"
                 style={{ x: smoothX }}
-                className="absolute top-1/2 h-80 w-150 -translate-y-1/2 -translate-x-1/2 rounded-2xl bg-zinc-100 shadow-2xl backdrop-blur-sm dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800"
             />
         </div>
     );
