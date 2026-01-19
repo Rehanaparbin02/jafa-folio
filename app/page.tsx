@@ -2,11 +2,14 @@ import Image from "next/image";
 import InfiniteText from "./component/InfiniteText";
 import HorizontalTracker from "./component/HorizontalTracker";
 import MiniAbout from "./component/MiniAbout";
+import BottomNav from "./component/BottomNav";
+import Loader from "./component/Loader";
 
 export default function Home() {
   return (
     /* We changed 'items-center justify-center' to 'flex-col' to stack the carousel below the main content */
     <div className="flex min-h-screen flex-col bg-zinc-50 font-sans dark:bg-black bg-noise">
+      <Loader />
       {/* Header */}
       <header className="flex w-full items-center justify-between px-6 py-8 text-sm sm:px-16">
         <div className="flex flex-col gap-1">
@@ -34,14 +37,15 @@ export default function Home() {
       </div>
 
       {/* Carousel at the bottom */}
-      <footer className="w-full ">
+      <footer className="w-full mt-[2rem] mb-[1rem]">
         <InfiniteText />
       </footer>
 
-      {/* <div>
+      <div>
         <MiniAbout />
-      </div> */}
+      </div>
 
+      <BottomNav />
     </div>
   );
 }

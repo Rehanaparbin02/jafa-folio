@@ -2,6 +2,8 @@
 import { Anton_SC } from "next/font/google";
 import "./globals.css";
 
+import SmoothScrolling from "./component/SmoothScrolling";
+
 const antonSC = Anton_SC({
   subsets: ["latin"],
   weight: "400",
@@ -11,7 +13,9 @@ const antonSC = Anton_SC({
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={antonSC.variable}>
-      <body>{children}</body>
+      <body>
+        <SmoothScrolling>{children}</SmoothScrolling>
+      </body>
     </html>
   );
 }
