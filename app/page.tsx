@@ -8,7 +8,7 @@ import Loader from "./component/Loader";
 export default function Home() {
   return (
     /* We changed 'items-center justify-center' to 'flex-col' to stack the carousel below the main content */
-    <div className="flex min-h-screen flex-col bg-zinc-50 font-sans dark:bg-black bg-noise">
+    <div className="flex min-h-screen flex-col bg-zinc-50 font-sans bg-noise overflow-x-hidden">
       <Loader />
       {/* Header */}
       <header className="flex w-full items-center justify-between px-6 py-8 text-sm sm:px-16">
@@ -41,9 +41,9 @@ export default function Home() {
         <InfiniteText />
       </footer>
 
-      <div>
+      {/* <div>
         <MiniAbout />
-      </div>
+      </div> */}
 
       <BottomNav />
     </div>
