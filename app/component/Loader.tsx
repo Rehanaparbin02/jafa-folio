@@ -2,23 +2,32 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { useLoader } from "../context/LoaderContext";
 
 export default function Loader() {
     const containerRef = useRef<HTMLDivElement>(null);
     const textRef = useRef<HTMLHeadingElement>(null);
     const [displayText, setDisplayText] = useState("");
+    const { isLoading, loaderText, hideLoader } = useLoader();
 
-    // The final text we want to show
-    const finalWord = "JAFAR SARIF";
+    // The final text we want to show (from context)
+    const finalWord = loaderText;
     // Characters to scramble with
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+";
 
     useEffect(() => {
-        const container = containerRef.current;
-        if (!container) return; // Guard clause
+        if (!isLoading) return;
 
-        // Prevent scrolling while loading
+        const container = containerRef.current;
+        const text = textRef.current;
+        if (!container || !text) return;
+
+        // Reset state and styles for re-triggering
+        setDisplayText("");
         document.body.style.overflow = "hidden";
+        container.style.display = "flex";
+        gsap.set(container, { yPercent: 0 });
+        gsap.set(text, { y: 0, opacity: 1 });
 
         let iteration = 0;
         let interval: NodeJS.Timeout;
@@ -30,29 +39,21 @@ export default function Loader() {
                     return finalWord
                         .split("")
                         .map((letter, index) => {
-                            // If the character is already "revealed" (index < iteration), return the real letter
                             if (index < iteration) {
                                 return finalWord[index];
                             }
-                            // Otherwise return a random character
                             return chars[Math.floor(Math.random() * chars.length)];
                         })
                         .join("");
                 });
 
-                // Speed of the reveal
                 if (iteration >= finalWord.length) {
                     clearInterval(interval);
-
-                    // Once text is fully revealed, wait a bit then animate out
                     setTimeout(() => {
                         finishLoading();
                     }, 800);
                 }
 
-                // Increment iteration slowly to "reveal" the text
-                // You can make this faster or slower. 
-                // 1/3 provides a nice "decoding" speed relative to the interval
                 iteration += 1 / 3;
             }, 30);
         };
@@ -65,23 +66,19 @@ export default function Loader() {
         const finishLoading = () => {
             const tl = gsap.timeline({
                 onComplete: () => {
-                    // Restore scrolling and hide/remove loader
                     document.body.style.overflow = "";
-                    if (containerRef.current) {
-                        containerRef.current.style.display = "none";
-                    }
+                    container.style.display = "none";
+                    hideLoader();
                 }
             });
 
-            // Animate the text up/fade out
-            tl.to(textRef.current, {
+            tl.to(text, {
                 y: -50,
                 opacity: 0,
                 duration: 0.8,
                 ease: "power3.in"
             })
-                // Animate the container (curtain effect - slide up)
-                .to(containerRef.current, {
+                .to(container, {
                     yPercent: -100,
                     duration: 1.2,
                     ease: "power4.inOut"
@@ -93,7 +90,7 @@ export default function Loader() {
             clearTimeout(initialDelay);
             document.body.style.overflow = "";
         };
-    }, []);
+    }, [isLoading, finalWord, hideLoader]);
 
     return (
         <div

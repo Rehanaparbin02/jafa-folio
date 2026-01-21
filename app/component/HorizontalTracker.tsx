@@ -1,80 +1,101 @@
-// "use client";
-
-// import { useRef, useEffect } from "react";
-// import gsap from "gsap";
-
-// export default function HorizontalTracker() {
-//     const boxRef = useRef<HTMLDivElement>(null);
-
-//     useEffect(() => {
-//         if (!boxRef.current) return;
-
-//         // quickTo provides optimized performance for frequent updates like mouse movement.
-//         // A duration of 0.5s with power3.out offers a smooth, high-end feel with low latency (low friction).
-//         const xTo = gsap.quickTo(boxRef.current, "x", {
-//             duration: 0.5,
-//             ease: "power3.out"
-//         });
-
-//         const handleMouseMove = (e: MouseEvent) => {
-//             // Center the 600px wide element on the cursor (offset by 300px)
-//             xTo(e.clientX - 300);
-//         };
-
-//         window.addEventListener("mousemove", handleMouseMove);
-//         return () => window.removeEventListener("mousemove", handleMouseMove);
-//     }, []);
-
-//     return (
-//         <div className="relative flex w-full items-center overflow-visible">
-//             <div
-//                 ref={boxRef}
-//                 className="h-[350px] w-[600px] rounded-3xl bg-black shadow-2xl dark:bg-white dark:shadow-[0_20px_50px_rgba(255,255,255,0.1)]"
-//             />
-//         </div>
-//     );
-// }
-
-
 "use client";
 
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+    gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function HorizontalTracker() {
+    const containerRef = useRef<HTMLDivElement>(null);
     const boxRef = useRef<HTMLDivElement>(null);
+    const innerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (!boxRef.current) return;
+        if (!boxRef.current || !containerRef.current || !innerRef.current) return;
 
-        // quickTo for position
-        const xTo = gsap.quickTo(boxRef.current, "x", {
-            duration: 0.6,
-            ease: "power3.out"
-        });
+        let xTo: gsap.QuickToFunc;
+        let rotateTo: gsap.QuickToFunc;
 
-        // Optional: Adding a slight tilt (rotation) for extra character
-        const rotateTo = gsap.quickTo(boxRef.current, "rotation", {
-            duration: 0.8,
-            ease: "power3.out"
-        });
+        const ctx = gsap.context(() => {
+            // Setup quickTo for smooth mouse following
+            xTo = gsap.quickTo(boxRef.current, "x", {
+                duration: 0.8,
+                ease: "power3.out"
+            });
+
+            rotateTo = gsap.quickTo(boxRef.current, "rotation", {
+                duration: 1.2,
+                ease: "power3.out"
+            });
+
+            // Scroll-triggered animations on the INNER element to avoid conflict with xTo
+            gsap.fromTo(
+                innerRef.current,
+                {
+                    scale: 0.4,
+                    opacity: 0,
+                    y: 100
+                },
+                {
+                    scale: 1,
+                    opacity: 1,
+                    y: 0,
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top bottom",
+                        end: "center center",
+                        scrub: 1.5,
+                        // markers: true, // Uncomment for debugging
+                    },
+                    ease: "power2.out",
+                }
+            );
+
+            // Zoom out effect when scrolling past
+            gsap.to(innerRef.current, {
+                scale: 0.8,
+                opacity: 0.5,
+                y: -100,
+                scrollTrigger: {
+                    trigger: containerRef.current,
+                    start: "center center",
+                    end: "bottom top",
+                    scrub: 1.5,
+                },
+                ease: "power2.in",
+            });
+        }, containerRef);
 
         const handleMouseMove = (e: MouseEvent) => {
-            const centerX = e.clientX - 300;
-            xTo(centerX);
+            if (!xTo || !rotateTo) return;
 
-            // Tilts the box slightly based on mouse velocity/position
-            const tilt = (e.clientX / window.innerWidth - 0.5) * 10;
+            // Calculate position relative to the viewport
+            // We want the box (700px wide) to be centered on the mouse
+            const targetX = e.clientX - 350;
+            xTo(targetX);
+
+            // Subtle rotation based on mouse position
+            const tilt = (e.clientX / window.innerWidth - 0.5) * 12;
             rotateTo(tilt);
         };
 
         window.addEventListener("mousemove", handleMouseMove);
-        return () => window.removeEventListener("mousemove", handleMouseMove);
+
+        return () => {
+            window.removeEventListener("mousemove", handleMouseMove);
+            ctx.revert();
+        };
     }, []);
 
     return (
-        <div className="relative flex w-full items-center overflow-visible">
-            {/* SVG Noise Filter Definition */}
+        <div
+            ref={containerRef}
+            className="relative flex w-full min-h-[60vh] items-center overflow-visible py-20"
+        >
+            {/* SVG Noise Filter */}
             <svg className="pointer-events-none absolute h-0 w-0">
                 <filter id="noiseFilter">
                     <feTurbulence
@@ -87,21 +108,42 @@ export default function HorizontalTracker() {
                 </filter>
             </svg>
 
+            {/* Mouse Follower Wrapper */}
             <div
                 ref={boxRef}
-                className="relative h-[350px] w-[600px] overflow-hidden rounded-3xl bg-zinc-900 shadow-2xl dark:bg-zinc-100"
+                className="pointer-events-none relative w-[700px] will-change-transform"
             >
-                {/* Noise Overlay */}
+                {/* Inner Animated Box */}
                 <div
-                    className="pointer-events-none absolute inset-0 opacity-[0.15] mix-blend-overlay"
-                    style={{ filter: "url(#noiseFilter)" }}
-                />
+                    ref={innerRef}
+                    className="pointer-events-auto relative h-[450px] overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-zinc-900 via-zinc-800 to-black shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] dark:from-white dark:via-zinc-100 dark:to-zinc-200"
+                >
+                    {/* Noise Overlay */}
+                    <div
+                        className="pointer-events-none absolute inset-0 opacity-[0.15] mix-blend-overlay"
+                        style={{ filter: "url(#noiseFilter)" }}
+                    />
 
-                {/* Content Placeholder */}
-                <div className="relative z-10 flex h-full items-center justify-center">
-                    <span className="text-sm font-medium uppercase tracking-widest text-white/20 dark:text-black/20">
-                        Textured Surface
-                    </span>
+                    {/* Content */}
+                    <div className="relative z-10 flex h-full flex-col items-center justify-center p-12 text-center">
+                        <span className="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-white/30 dark:text-black/30">
+                            Interactive Experience
+                        </span>
+                        <h2 className="text-5xl font-black tracking-tighter text-white dark:text-black sm:text-7xl">
+                            JAFAR'S<br />DOMAIN
+                        </h2>
+                        <div className="mt-8 flex items-center gap-4">
+                            <div className="h-[1px] w-12 bg-white/20 dark:bg-black/20" />
+                            <span className="text-sm font-medium text-white/50 dark:text-black/50">
+                                SCROLL TO EXPLORE
+                            </span>
+                            <div className="h-[1px] w-12 bg-white/20 dark:bg-black/20" />
+                        </div>
+                    </div>
+
+                    {/* Decorative Blobs */}
+                    <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-blue-500/10 blur-[100px]" />
+                    <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-purple-500/10 blur-[100px]" />
                 </div>
             </div>
         </div>
