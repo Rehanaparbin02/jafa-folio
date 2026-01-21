@@ -19,7 +19,7 @@ declare module '@react-three/fiber' {
 
 export default function IdCard() {
     return (
-        <div style={{ width: '100vw', height: '100vh', background: 'transparent' }}>
+        <div style={{ width: '100vw', height: '100vh', background: 'black', overflow: 'hidden' }}>
             <Canvas camera={{ position: [0, 0, 13], fov: 25 }}>
                 <ambientLight intensity={Math.PI} />
                 <Suspense fallback={null}>
@@ -27,8 +27,8 @@ export default function IdCard() {
                         <Band />
                     </Physics>
                 </Suspense>
-                <Environment background blur={0.75}>
-                    <color attach="background" args={['black']} />
+                <color attach="background" args={['#000000']} />
+                <Environment blur={0.75}>
                     <Lightformer intensity={2} color="white" position={[0, -1, 5]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
                     <Lightformer intensity={3} color="white" position={[-1, -1, 1]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
                     <Lightformer intensity={3} color="white" position={[1, 1, 1]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
@@ -78,10 +78,10 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
         strapTexture.repeat.set(10, 1)
     }, [strapTexture])
 
-    useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1])
-    useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1])
-    useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1])
-    useSphericalJoint(j3, card, [[0, 0, 0], [0, 1.2, 0]])
+    useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 0.5])
+    useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 0.5])
+    useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 0.5])
+    useSphericalJoint(j3, card, [[0, 0, 0], [0, 1.45, 0]])
 
     useEffect(() => {
         if (hovered) {
@@ -137,17 +137,17 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
         <>
             <group position={[0, 4, 0]}>
                 <RigidBody ref={fixed} {...segmentProps} type="fixed" />
-                <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps}>
+                <RigidBody position={[0.25, 0, 0]} ref={j1} {...segmentProps}>
                     <BallCollider args={[0.1]} />
                 </RigidBody>
-                <RigidBody position={[1, 0, 0]} ref={j2} {...segmentProps}>
+                <RigidBody position={[0.5, 0, 0]} ref={j2} {...segmentProps}>
                     <BallCollider args={[0.1]} />
                 </RigidBody>
-                <RigidBody position={[1.5, 0, 0]} ref={j3} {...segmentProps}>
+                <RigidBody position={[0.75, 0, 0]} ref={j3} {...segmentProps}>
                     <BallCollider args={[0.1]} />
                 </RigidBody>
-                <RigidBody position={[2, 0, 0]} ref={card} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
-                    <CuboidCollider args={[0.95, 1.35, 0.01]} />
+                <RigidBody position={[1, 0, 0]} ref={card} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
+                    <CuboidCollider args={[0.8, 1.125, 0.01]} />
                     <group
                         scale={1.2}
                         position={[0, 0, -0.05]}

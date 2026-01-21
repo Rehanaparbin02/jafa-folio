@@ -22,7 +22,7 @@ export default function Home() {
       </div>
 
       {/* Carousel at the bottom */}
-      <footer className="absolute bottom-30 w-full z-10 pointer-events-none">
+      <footer className="absolute bottom-80 w-full z-10 pointer-events-none">
         <InfiniteText />
       </footer>
     </div>
