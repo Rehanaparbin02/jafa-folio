@@ -71,12 +71,17 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     const [hovered, hover] = useState(false)
 
     // Load the texture - useTexture handles errors internally with Suspense
-    const texture = useTexture('/assets/idcard/Frame 3.png')
+    const [texture, strapTexture] = useTexture(['/assets/idcard/Frame 3.png', '/assets/idcard/strap.png'])
+
+    useEffect(() => {
+        strapTexture.wrapS = strapTexture.wrapT = THREE.RepeatWrapping
+        strapTexture.repeat.set(10, 1)
+    }, [strapTexture])
 
     useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1])
     useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1])
     useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1])
-    useSphericalJoint(j3, card, [[0, 0, 0], [0, 1.45, 0]])
+    useSphericalJoint(j3, card, [[0, 0, 0], [0, 1.2, 0]])
 
     useEffect(() => {
         if (hovered) {
@@ -140,10 +145,10 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
                     <BallCollider args={[0.1]} />
                 </RigidBody>
                 <RigidBody position={[2, 0, 0]} ref={card} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
-                    <CuboidCollider args={[0.8, 1.125, 0.01]} />
+                    <CuboidCollider args={[0.95, 1.35, 0.01]} />
                     <group
-                        scale={2.25}
-                        position={[0, -1.2, -0.05]}
+                        scale={1.2}
+                        position={[0, 0, -0.05]}
                         onPointerOver={() => hover(true)}
                         onPointerOut={() => hover(false)}
                         onPointerUp={(e) => {
@@ -171,13 +176,13 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
 
                         {/* Clip at top */}
                         {/* Simulated Hole */}
-                        <mesh position={[0, 1, 0]} rotation={[Math.PI / 2, 0, 0]}>
+                        <mesh position={[0, 1, 0.01]} rotation={[Math.PI / 2, 0, 0]}>
                             <cylinderGeometry args={[0.09, 0.09, 0.03, 32]} />
                             <meshBasicMaterial color="#000" />
                         </mesh>
 
                         {/* Simple Black Clip */}
-                        <group position={[0, 1.15, 0.02]}>
+                        <group position={[0, 1.15, 0.3]}>
                             {/* Connecting Clamp */}
                             <mesh position={[0, -0.05, 0]}>
                                 <boxGeometry args={[0.08, 0.15, 0.03]} />
@@ -200,9 +205,12 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
             <mesh ref={band}>
                 <meshLineGeometry />
                 <meshLineMaterial
-                    color="#4ade80"
+                    color="white"
                     resolution={[width, height]}
-                    lineWidth={1}
+                    useMap
+                    map={strapTexture}
+                    repeat={[-3, 1]}
+                    lineWidth={0.5}
                 />
             </mesh>
         </>
