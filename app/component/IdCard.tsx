@@ -170,27 +170,28 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
                         </mesh>
 
                         {/* Clip at top */}
-                        {/* Clip at top */}
-                        <group position={[0, 1.35, 0.1]}>
-                            {/* D-Ring Loop */}
-                            <mesh position={[0, 0.06, 0]}>
-                                <torusGeometry args={[0.06, 0.008, 16, 32]} />
-                                <meshStandardMaterial color="#222" metalness={0.8} roughness={0.2} />
+                        {/* Simulated Hole */}
+                        <mesh position={[0, 1, 0]} rotation={[Math.PI / 2, 0, 0]}>
+                            <cylinderGeometry args={[0.09, 0.09, 0.03, 32]} />
+                            <meshBasicMaterial color="#000" />
+                        </mesh>
+
+                        {/* Simple Black Clip */}
+                        <group position={[0, 1.15, 0.02]}>
+                            {/* Connecting Clamp */}
+                            <mesh position={[0, -0.05, 0]}>
+                                <boxGeometry args={[0.08, 0.15, 0.03]} />
+                                <meshStandardMaterial color="#1a1a1a" metalness={0.5} roughness={0.4} />
                             </mesh>
-                            {/* Swivel */}
-                            <mesh position={[0, 0, 0]}>
-                                <cylinderGeometry args={[0.03, 0.03, 0.08, 16]} />
-                                <meshStandardMaterial color="#222" metalness={0.8} roughness={0.2} />
+                            {/* Swivel Cylinder */}
+                            <mesh position={[0, 0.05, 0]}>
+                                <cylinderGeometry args={[0.05, 0.05, 0.08, 16]} />
+                                <meshStandardMaterial color="#1a1a1a" metalness={0.5} roughness={0.4} />
                             </mesh>
-                            {/* Hook Body */}
-                            <mesh position={[0, -0.08, 0]}>
-                                <boxGeometry args={[0.04, 0.12, 0.02]} />
-                                <meshStandardMaterial color="#222" metalness={0.8} roughness={0.2} />
-                            </mesh>
-                            {/* Hook Tip */}
-                            <mesh position={[0, -0.14, 0.01]} rotation={[Math.PI / 4, 0, 0]}>
-                                <boxGeometry args={[0.03, 0.04, 0.01]} />
-                                <meshStandardMaterial color="#222" metalness={0.8} roughness={0.2} />
+                            {/* Top Ring */}
+                            <mesh position={[0, 0.12, 0]} rotation={[0, Math.PI / 2, 0]}>
+                                <torusGeometry args={[0.07, 0.01, 16, 32]} />
+                                <meshStandardMaterial color="#1a1a1a" metalness={0.5} roughness={0.4} />
                             </mesh>
                         </group>
                     </group>
@@ -199,7 +200,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
             <mesh ref={band}>
                 <meshLineGeometry />
                 <meshLineMaterial
-                    color="white"
+                    color="#4ade80"
                     resolution={[width, height]}
                     lineWidth={1}
                 />
