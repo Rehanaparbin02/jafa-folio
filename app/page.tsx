@@ -15,14 +15,14 @@ const IdCard = dynamic(() => import('./component/IdCard'), {
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col bg-zinc-50 font-sans bg-noise overflow-x-hidden">
+    <div className="flex min-h-screen flex-col bg-black font-sans bg-noise overflow-x-hidden">
       {/* 3D Badge Section */}
-      <div className="w-full h-screen">
+      <div className="w-full h-screen relative">
         <IdCard />
       </div>
 
       {/* Carousel at the bottom */}
-      <footer className="w-full mt-[2rem] mb-[1rem]">
+      <footer className="absolute bottom-30 w-full z-10 pointer-events-none">
         <InfiniteText />
       </footer>
     </div>

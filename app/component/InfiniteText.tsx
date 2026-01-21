@@ -9,7 +9,7 @@ const InfiniteText = () => {
     const text = "JAFAR'S DOMAIN";
 
     return (
-        <div className="relative flex w-full overflow-hidden bg-transparent py-24">
+        <div className="relative flex w-full overflow-hidden bg-transparent py-19 relative top-80">
             {/* The motion.div contains two sets of the same text. 
         As the first set moves out of view, the second follows, 
         creating the infinite loop illusion.
@@ -27,7 +27,7 @@ const InfiniteText = () => {
                 {[...Array(6)].map((_, i) => (
                     <span
                         key={i}
-                        className={`${gondens.className} text-8xl md:text-[12rem] text-black dark:text-white px-12 tracking-wide uppercase select-none`}
+                        className={`${gondens.className} text-8xl md:text-[12rem] text-white px-12 tracking-wide uppercase select-none`}
                     >
                         {text}
                     </span>

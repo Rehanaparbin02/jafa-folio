@@ -19,7 +19,7 @@ declare module '@react-three/fiber' {
 
 export default function IdCard() {
     return (
-        <div style={{ width: '100vw', height: '100vh', background: '#ffffffff' }}>
+        <div style={{ width: '100vw', height: '100vh', background: 'transparent' }}>
             <Canvas camera={{ position: [0, 0, 13], fov: 25 }}>
                 <ambientLight intensity={Math.PI} />
                 <Suspense fallback={null}>
@@ -117,7 +117,9 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
                 )
             })
             // Calculate catmull curve
-            curve.points[0].copy(j3.current.translation())
+            // Shorten the strap endpoint so it doesn't overlap the clip
+            const dir = j2.current.lerped.clone().sub(j3.current.translation()).normalize().multiplyScalar(0.25)
+            curve.points[0].copy(j3.current.translation()).add(dir)
             curve.points[1].copy(j2.current.lerped)
             curve.points[2].copy(j1.current.lerped)
             curve.points[3].copy(fixed.current.translation())
@@ -177,26 +179,26 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
                         {/* Clip at top */}
                         {/* Simulated Hole */}
                         <mesh position={[0, 1, 0.01]} rotation={[Math.PI / 2, 0, 0]}>
-                            <cylinderGeometry args={[0.09, 0.09, 0.03, 32]} />
+                            <cylinderGeometry args={[0.07, 0.07, 0.04, 32]} />
                             <meshBasicMaterial color="#000" />
                         </mesh>
 
                         {/* Simple Black Clip */}
-                        <group position={[0, 1.15, 0.3]}>
+                        <group position={[0, 1.1, 0.3]}>
                             {/* Connecting Clamp */}
                             <mesh position={[0, -0.05, 0]}>
-                                <boxGeometry args={[0.08, 0.15, 0.03]} />
-                                <meshStandardMaterial color="#1a1a1a" metalness={0.5} roughness={0.4} />
+                                <boxGeometry args={[0.08, 0.12, 0.04]} />
+                                <meshStandardMaterial color="#111" metalness={0.8} roughness={0.2} />
                             </mesh>
                             {/* Swivel Cylinder */}
                             <mesh position={[0, 0.05, 0]}>
-                                <cylinderGeometry args={[0.05, 0.05, 0.08, 16]} />
-                                <meshStandardMaterial color="#1a1a1a" metalness={0.5} roughness={0.4} />
+                                <cylinderGeometry args={[0.05, 0.05, 0.06, 16]} />
+                                <meshStandardMaterial color="#111" metalness={0.8} roughness={0.2} />
                             </mesh>
                             {/* Top Ring */}
-                            <mesh position={[0, 0.12, 0]} rotation={[0, Math.PI / 2, 0]}>
-                                <torusGeometry args={[0.07, 0.01, 16, 32]} />
-                                <meshStandardMaterial color="#1a1a1a" metalness={0.5} roughness={0.4} />
+                            <mesh position={[0, 0.1, 0]} rotation={[0, Math.PI / 2, 0]}>
+                                <torusGeometry args={[0.06, 0.008, 16, 32]} />
+                                <meshStandardMaterial color="#111" metalness={0.8} roughness={0.2} />
                             </mesh>
                         </group>
                     </group>
