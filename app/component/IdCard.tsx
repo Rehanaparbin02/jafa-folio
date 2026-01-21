@@ -170,10 +170,29 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
                         </mesh>
 
                         {/* Clip at top */}
-                        <mesh position={[0, 1.3, 0]} rotation={[0, 0, 0]}>
-                            <cylinderGeometry args={[0.08, 0.08, 0.15, 16]} />
-                            <meshStandardMaterial color="#1f2937" metalness={0.8} roughness={0.2} />
-                        </mesh>
+                        {/* Clip at top */}
+                        <group position={[0, 1.35, 0.1]}>
+                            {/* D-Ring Loop */}
+                            <mesh position={[0, 0.06, 0]}>
+                                <torusGeometry args={[0.06, 0.008, 16, 32]} />
+                                <meshStandardMaterial color="#222" metalness={0.8} roughness={0.2} />
+                            </mesh>
+                            {/* Swivel */}
+                            <mesh position={[0, 0, 0]}>
+                                <cylinderGeometry args={[0.03, 0.03, 0.08, 16]} />
+                                <meshStandardMaterial color="#222" metalness={0.8} roughness={0.2} />
+                            </mesh>
+                            {/* Hook Body */}
+                            <mesh position={[0, -0.08, 0]}>
+                                <boxGeometry args={[0.04, 0.12, 0.02]} />
+                                <meshStandardMaterial color="#222" metalness={0.8} roughness={0.2} />
+                            </mesh>
+                            {/* Hook Tip */}
+                            <mesh position={[0, -0.14, 0.01]} rotation={[Math.PI / 4, 0, 0]}>
+                                <boxGeometry args={[0.03, 0.04, 0.01]} />
+                                <meshStandardMaterial color="#222" metalness={0.8} roughness={0.2} />
+                            </mesh>
+                        </group>
                     </group>
                 </RigidBody>
             </group>
@@ -181,7 +200,6 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
                 <meshLineGeometry />
                 <meshLineMaterial
                     color="white"
-                    depthTest={false}
                     resolution={[width, height]}
                     lineWidth={1}
                 />
