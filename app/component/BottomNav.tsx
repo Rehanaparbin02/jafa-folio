@@ -16,7 +16,7 @@ export default function BottomNav() {
     const loaderTextMap: Record<string, string> = {
         "/": "JAFAR SARIF",
         "/about": "KNOW ME MORE",
-        "/blog": "BEYOND THE CODE",
+        "/articles": "BEYOND THE CODE",
         "/contact": "SAY HELLO"
     };
 
@@ -29,11 +29,11 @@ export default function BottomNav() {
             href: "/"
         },
         {
-            title: "Blog",
+            title: "Articles",
             icon: (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>
             ),
-            href: "/blog"
+            href: "/articles"
         },
         {
             title: "About",
@@ -139,7 +139,7 @@ export default function BottomNav() {
                                 {isActive && (
                                     <motion.div
                                         layoutId="active-nav-line"
-                                        className="absolute bottom-1.5 left-1/2 -translate-x-1/2 h-0.5 w-3 rounded-full bg-white shadow-[0_0_8px_white]"
+                                        className="absolute bottom-1.5 left-1/2 -translate-x-1/2 h-0.5 w-3 rounded-full bg-green-500 shadow-[0_0_8px_green]"
                                         transition={{ type: "spring", bounce: 0 }}
                                     />
                                 )}

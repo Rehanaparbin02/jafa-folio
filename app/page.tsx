@@ -17,14 +17,13 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-black font-sans bg-noise overflow-x-hidden">
       {/* 3D Badge Section */}
-      <div className="w-full h-screen relative">
-        <IdCard />
-      </div>
-
-      {/* Carousel at the bottom */}
-      <footer className="absolute bottom-80 w-full z-10 pointer-events-none">
+      {/* 3D Badge Section */}
+      <div className="w-full h-screen relative overflow-hidden">
         <InfiniteText />
-      </footer>
+        <div className="relative z-20 w-full h-full">
+          <IdCard />
+        </div>
+      </div>
     </div>
   )
 }

@@ -19,7 +19,7 @@ declare module '@react-three/fiber' {
 
 export default function IdCard() {
     return (
-        <div style={{ width: '100vw', height: '100vh', background: 'black', overflow: 'hidden' }}>
+        <div style={{ width: '100vw', height: '100vh', background: 'transparent', overflow: 'hidden' }}>
             <Canvas camera={{ position: [0, 0, 13], fov: 25 }}>
                 <ambientLight intensity={Math.PI} />
                 <Suspense fallback={null}>
@@ -27,7 +27,7 @@ export default function IdCard() {
                         <Band />
                     </Physics>
                 </Suspense>
-                <color attach="background" args={['#000000']} />
+
                 <Environment blur={0.75}>
                     <Lightformer intensity={2} color="white" position={[0, -1, 5]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
                     <Lightformer intensity={3} color="white" position={[-1, -1, 1]} rotation={[0, 0, Math.PI / 3]} scale={[100, 0.1, 1]} />
@@ -75,12 +75,15 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
 
     useEffect(() => {
         strapTexture.wrapS = strapTexture.wrapT = THREE.RepeatWrapping
-        strapTexture.repeat.set(10, 1)
+        strapTexture.repeat.set(1, 1)
+        strapTexture.anisotropy = 16
+        strapTexture.minFilter = THREE.LinearFilter
+        strapTexture.magFilter = THREE.LinearFilter
     }, [strapTexture])
 
     useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 0.5])
-    useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 0.5])
-    useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 0.5])
+    useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1])
+    useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 0.8])
     useSphericalJoint(j3, card, [[0, 0, 0], [0, 1.45, 0]])
 
     useEffect(() => {
@@ -117,13 +120,13 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
                 )
             })
             // Calculate catmull curve
-            // Shorten the strap endpoint so it doesn't overlap the clip
-            const dir = j2.current.lerped.clone().sub(j3.current.translation()).normalize().multiplyScalar(0.25)
-            curve.points[0].copy(j3.current.translation()).add(dir)
+            // Create smooth connection points
+            const strapOffset = j2.current.lerped.clone().sub(j3.current.translation()).normalize().multiplyScalar(0.35)
+            curve.points[0].copy(j3.current.translation()).add(strapOffset)
             curve.points[1].copy(j2.current.lerped)
             curve.points[2].copy(j1.current.lerped)
             curve.points[3].copy(fixed.current.translation())
-            band.current.geometry.setPoints(curve.getPoints(32))
+            band.current.geometry.setPoints(curve.getPoints(128))
             // Tilt back towards screen
             ang.copy(card.current.angvel())
             rot.copy(card.current.rotation())
@@ -149,7 +152,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
                 <RigidBody position={[1, 0, 0]} ref={card} {...segmentProps} type={dragged ? 'kinematicPosition' : 'dynamic'}>
                     <CuboidCollider args={[0.8, 1.125, 0.01]} />
                     <group
-                        scale={1.2}
+                        scale={1.8}
                         position={[0, 0, -0.05]}
                         onPointerOver={() => hover(true)}
                         onPointerOut={() => hover(false)}
@@ -184,21 +187,21 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
                         </mesh>
 
                         {/* Simple Black Clip */}
-                        <group position={[0, 1.1, 0.3]}>
+                        <group position={[0, 1.1, 0.05]}>
                             {/* Connecting Clamp */}
-                            <mesh position={[0, -0.05, 0]}>
+                            <mesh position={[0, -0.08, 0]}>
                                 <boxGeometry args={[0.08, 0.12, 0.04]} />
-                                <meshStandardMaterial color="#111" metalness={0.8} roughness={0.2} />
+                                <meshStandardMaterial color="#e2e2e2" metalness={0.9} roughness={0.15} />
                             </mesh>
                             {/* Swivel Cylinder */}
-                            <mesh position={[0, 0.05, 0]}>
+                            <mesh position={[0, 0.02, 0]}>
                                 <cylinderGeometry args={[0.05, 0.05, 0.06, 16]} />
-                                <meshStandardMaterial color="#111" metalness={0.8} roughness={0.2} />
+                                <meshStandardMaterial color="#e2e2e2" metalness={0.9} roughness={0.15} />
                             </mesh>
                             {/* Top Ring */}
                             <mesh position={[0, 0.1, 0]} rotation={[0, Math.PI / 2, 0]}>
                                 <torusGeometry args={[0.06, 0.008, 16, 32]} />
-                                <meshStandardMaterial color="#111" metalness={0.8} roughness={0.2} />
+                                <meshStandardMaterial color="#e2e2e2" metalness={0.9} roughness={0.15} />
                             </mesh>
                         </group>
                     </group>
@@ -207,12 +210,16 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
             <mesh ref={band}>
                 <meshLineGeometry />
                 <meshLineMaterial
-                    color="white"
+                    color="#cccccc"
                     resolution={[width, height]}
-                    useMap
+                    useMap={1}
                     map={strapTexture}
-                    repeat={[-3, 1]}
-                    lineWidth={0.5}
+                    repeat={[1, 1]}
+                    lineWidth={0.35}
+                    depthTest={true}
+                    depthWrite={true}
+                    transparent={false}
+                    sizeAttenuation={1}
                 />
             </mesh>
         </>

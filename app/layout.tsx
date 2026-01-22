@@ -5,6 +5,7 @@ import SmoothScrolling from "./component/SmoothScrolling";
 import BottomNav from "./component/BottomNav";
 import { LoaderProvider } from "./context/LoaderContext";
 import Loader from "./component/Loader";
+import CustomCursor from "./component/CustomCursor";
 import PageTransition from "./component/PageTransition";
 
 const antonSC = Anton_SC({
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body>
                 <LoaderProvider>
                     <Loader />
+                    <CustomCursor />
                     <SmoothScrolling>
                         <PageTransition>
                             {children}
