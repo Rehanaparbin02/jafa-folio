@@ -25,7 +25,7 @@ export default function ArticlesPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.1 }}
-                        className="text-zinc-400 text-lg md:text-xl max-w-sm"
+                        className="text-zinc-400 text-lg md:text-xl max-w-sm relative top-[27rem]"
                     >
                         Exploring the frontiers of security research, zero-day analysis, and modern cryptographic architectures.
                     </motion.p>

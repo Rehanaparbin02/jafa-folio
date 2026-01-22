@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -11,6 +11,10 @@ export default function BottomNav() {
     const router = useRouter();
     const { showLoader } = useLoader();
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+    const [isVisible, setIsVisible] = useState(true);
+    const [isMouseOver, setIsMouseOver] = useState(false);
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
 
     // Map routes to loader text
     const loaderTextMap: Record<string, string> = {
@@ -51,14 +55,67 @@ export default function BottomNav() {
         }
     ];
 
+    useEffect(() => {
+        const resetTimer = () => {
+            setIsVisible(true);
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+            if (!isMouseOver) {
+                timeoutRef.current = setTimeout(() => {
+                    setIsVisible(false);
+                }, 1000); // 1 second
+            }
+        };
+
+        const handleMouseMove = () => {
+            setIsVisible(true);
+            resetTimer();
+        };
+
+        const handleScroll = () => {
+            resetTimer();
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('mousemove', handleMouseMove);
+
+        // Initial timer
+        resetTimer();
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('mousemove', handleMouseMove);
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        };
+    }, [isMouseOver]);
+
+
+
     return (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100]">
+        <div
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100]"
+            onMouseEnter={() => setIsMouseOver(true)}
+            onMouseLeave={() => {
+                setIsMouseOver(false);
+                setHoveredIndex(null);
+            }}
+        >
             <motion.nav
                 initial={{ y: 100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
+                animate={{
+                    y: isVisible ? 0 : 120, // Move further down to hide
+                    opacity: isVisible ? 1 : 0,
+                    scale: isVisible ? 1 : 0.95
+                }}
+                transition={{
+                    type: "spring",
+                    stiffness: 260,
+                    damping: 20,
+                    opacity: { duration: 0.2 }
+                }}
                 className="relative flex items-center gap-1.5 p-2 rounded-[2.5rem] bg-zinc-950/90 backdrop-blur-3xl border border-white/10 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.7)]"
-                onMouseLeave={() => setHoveredIndex(null)}
             >
+
                 {/* Profile Section */}
                 <div className="flex items-center gap-3 pl-2 pr-4 border-r border-white/5 group cursor-default">
                     <div className="relative h-11 w-11 overflow-hidden rounded-full border border-white/10 bg-zinc-900 shadow-inner">
