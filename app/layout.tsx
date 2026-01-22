@@ -1,4 +1,4 @@
-import { Anton_SC } from "next/font/google";
+import { Anton_SC, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
 import SmoothScrolling from "./component/SmoothScrolling";
@@ -14,9 +14,14 @@ const antonSC = Anton_SC({
     variable: "--font-anton",
 });
 
+const plusJakarta = Plus_Jakarta_Sans({
+    subsets: ["latin"],
+    variable: "--font-jakarta",
+});
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en" className={antonSC.variable}>
+        <html lang="en" className={`${antonSC.variable} ${plusJakarta.variable}`}>
             <body>
                 <LoaderProvider>
                     <Loader />
