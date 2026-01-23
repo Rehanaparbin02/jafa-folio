@@ -7,6 +7,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Shield, Target, Zap, Code, Cpu, Mail, MapPin, Globe, ArrowRight } from "lucide-react";
+import { useLoader } from "../context/LoaderContext";
+import Background from "../component/Background";
 
 const gondens = localFont({ src: '../fonts/Gondens-DEMO.otf' });
 
@@ -38,6 +40,7 @@ export default function Page() {
     const containerRef = useRef<HTMLDivElement>(null);
     const heroRef = useRef<HTMLDivElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
+    const { isLoading } = useLoader();
 
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -48,6 +51,7 @@ export default function Page() {
     const opacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
 
     useEffect(() => {
+        if (isLoading) return;
         if (!containerRef.current) return;
 
         const ctx = gsap.context(() => {
@@ -80,15 +84,18 @@ export default function Page() {
         }, containerRef);
 
         return () => ctx.revert();
-    }, []);
+    }, [isLoading]);
 
     return (
         <div ref={containerRef} className="min-h-screen w-full bg-black text-white selection:bg-zinc-100 selection:text-black">
+            {/* Vanta NET Background */}
+            <Background />
+
             {/* Noise Overlay */}
             <div className="bg-noise pointer-events-none fixed inset-0 z-50 opacity-10" />
 
             {/* Hero Section */}
-            <section ref={heroRef} className="relative flex h-screen w-full flex-col items-center justify-center overflow-hidden px-6">
+            <section ref={heroRef} className="relative flex h-screen w-full flex-col items-center justify-center overflow-visible px-6 z-10">
                 <motion.div style={{ y: heroY, opacity }} className="relative z-10 flex flex-col items-center text-center">
                     <div className="mb-4 flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/50 px-4 py-1.5 backdrop-blur-sm">
                         <span className="flex h-2 w-2 rounded-full bg-green-500 animate-pulse" />
@@ -106,11 +113,6 @@ export default function Page() {
                     </p>
                 </motion.div>
 
-                {/* Hero Background Elements */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-20">
-                    <div className="h-[500px] w-[500px] rounded-full bg-white blur-[150px] mix-blend-overlay" />
-                </div>
-
                 <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4">
                     <span className="text-[10px] uppercase tracking-[0.3em] text-green-500/60 font-mono">Scroll to explore</span>
                     <div className="h-12 w-[1px] bg-gradient-to-b from-green-500/40 to-transparent" />
@@ -118,12 +120,12 @@ export default function Page() {
             </section>
 
             {/* Main Content */}
-            <div className="mx-auto max-w-7xl px-6 py-24 sm:px-12">
+            <div className="relative z-10 mx-auto max-w-7xl px-6 py-24 sm:px-12">
 
                 {/* Intro Section with Image */}
                 <div className="grid gap-20 lg:grid-cols-2 items-start">
                     <div className="relative group">
-                        <div className="overflow-hidden rounded-2xl bg-zinc-900 border border-zinc-800 aspect-[4/5] parallax-img">
+                        <div className="overflow-hidden rounded-2xl bg-zinc-900/80 backdrop-blur-sm border border-zinc-800 aspect-[4/5] parallax-img">
                             <Image
                                 src="/assets/jafar_portrait.png"
                                 alt="Jafar Sarif Portrait"
@@ -238,7 +240,7 @@ export default function Page() {
                         </div>
 
                         <div className="space-y-8 lg:border-l lg:border-zinc-800 lg:pl-16">
-                            <div className="p-8 rounded-2xl bg-zinc-900/50 border border-zinc-800">
+                            <div className="p-8 rounded-2xl bg-zinc-900/50 backdrop-blur-sm border border-zinc-800">
                                 <h5 className="font-mono text-[10px] uppercase text-zinc-500 mb-6 flex items-center gap-2">
                                     <Cpu size={14} /> System Specs
                                 </h5>
@@ -294,7 +296,7 @@ export default function Page() {
             </div>
 
             {/* Footer-like Contact Block */}
-            <footer className="w-full px-6 py-12 border-t border-zinc-900 bg-black/50 backdrop-blur-md">
+            <footer className="relative z-10 w-full px-6 py-12 border-t border-zinc-900 bg-black/50 backdrop-blur-md">
                 <div className="mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-center gap-8">
                     <p className="text-zinc-500 text-xs font-mono tracking-tighter uppercase">© 2026 Jafar Sarif • Domain Research</p>
                     <div className="flex gap-12 text-zinc-400">

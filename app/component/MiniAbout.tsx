@@ -3,14 +3,17 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useLoader } from "../context/LoaderContext";
 
 export default function MiniAbout() {
     const containerRef = useRef<HTMLDivElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
     const bodyTextRef = useRef<HTMLParagraphElement>(null);
     const statsRef = useRef<HTMLDivElement>(null);
+    const { isLoading } = useLoader();
 
     useEffect(() => {
+        if (isLoading) return;
         gsap.registerPlugin(ScrollTrigger);
 
         const container = containerRef.current;
@@ -78,7 +81,7 @@ export default function MiniAbout() {
         }, container);
 
         return () => ctx.revert();
-    }, []);
+    }, [isLoading]);
 
     const text =
         "I'm a passionate developer creating digital experiences that bridge the gap between aesthetics and functionality. With a keen eye for detail and a love for smooth animations, I build websites that leave a lasting impression.";

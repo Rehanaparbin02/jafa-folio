@@ -10,6 +10,7 @@ import { useLoader } from "../context/LoaderContext";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Background from "../component/Background";
 
 const gondens = localFont({ src: '../fonts/Gondens-DEMO.otf' });
 
@@ -19,7 +20,7 @@ if (typeof window !== "undefined") {
 
 export default function ArticlesPage() {
     const router = useRouter();
-    const { showLoader } = useLoader();
+    const { showLoader, isLoading } = useLoader();
     const containerRef = useRef<HTMLDivElement>(null);
     const titleRef = useRef<HTMLHeadingElement>(null);
     const descRef = useRef<HTMLParagraphElement>(null);
@@ -28,10 +29,12 @@ export default function ArticlesPage() {
         showLoader(text);
         setTimeout(() => {
             router.push(href);
-        }, 100);
+        }, 500);
     };
 
     useEffect(() => {
+        if (isLoading) return;
+
         const ctx = gsap.context(() => {
             // On load animation for title and description
             gsap.fromTo(titleRef.current,
@@ -66,10 +69,12 @@ export default function ArticlesPage() {
         }, containerRef);
 
         return () => ctx.revert();
-    }, []);
+    }, [isLoading]);
 
     return (
-        <div ref={containerRef} className="min-h-screen bg-black text-white font-sans bg-noise selection:bg-emerald-500/30 selection:text-emerald-400 ">
+        <div ref={containerRef} className="min-h-screen bg-black text-white font-sans bg-noise selection:bg-emerald-500/30 selection:text-emerald-400">
+            {/* Vanta NET Background */}
+            <Background />
             <main className="max-w-7xl mx-auto px-6  md:py-24">
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-32">

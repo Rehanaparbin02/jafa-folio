@@ -8,9 +8,12 @@ export default function PageTransition({ children }: { children: React.ReactNode
 
     return (
         <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isLoading ? 0 : 1 }}
-            transition={{ duration: 0.5, delay: 0 }}
+            initial={{ opacity: 0, y: -50 }}
+            animate={{
+                opacity: isLoading ? 0 : 1,
+                y: isLoading ? -50 : 0
+            }}
+            transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
         >
             {children}
         </motion.div>

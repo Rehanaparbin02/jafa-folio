@@ -9,7 +9,7 @@ import { useLoader } from "../context/LoaderContext";
 export default function BottomNav() {
     const pathname = usePathname();
     const router = useRouter();
-    const { showLoader } = useLoader();
+    const { showLoader, isLoading } = useLoader();
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     const [isVisible, setIsVisible] = useState(true);
     const [isMouseOver, setIsMouseOver] = useState(false);
@@ -103,9 +103,9 @@ export default function BottomNav() {
             <motion.nav
                 initial={{ y: 100, opacity: 0 }}
                 animate={{
-                    y: isVisible ? 0 : 120, // Move further down to hide
-                    opacity: isVisible ? 1 : 0,
-                    scale: isVisible ? 1 : 0.95
+                    y: (isLoading || !isVisible) ? 120 : 0,
+                    opacity: (isLoading || !isVisible) ? 0 : 1,
+                    scale: (isLoading || !isVisible) ? 0.95 : 1
                 }}
                 transition={{
                     type: "spring",

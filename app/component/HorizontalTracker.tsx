@@ -3,6 +3,7 @@
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useLoader } from "../context/LoaderContext";
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
@@ -12,8 +13,10 @@ export default function HorizontalTracker() {
     const containerRef = useRef<HTMLDivElement>(null);
     const boxRef = useRef<HTMLDivElement>(null);
     const innerRef = useRef<HTMLDivElement>(null);
+    const { isLoading } = useLoader();
 
     useEffect(() => {
+        if (isLoading) return;
         if (!boxRef.current || !containerRef.current || !innerRef.current) return;
 
         let xTo: gsap.QuickToFunc;
@@ -88,7 +91,7 @@ export default function HorizontalTracker() {
             window.removeEventListener("mousemove", handleMouseMove);
             ctx.revert();
         };
-    }, []);
+    }, [isLoading]);
 
     return (
         <div

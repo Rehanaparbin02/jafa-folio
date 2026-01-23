@@ -26,7 +26,12 @@ export default function Loader() {
         setDisplayText("");
         document.body.style.overflow = "hidden";
         container.style.display = "flex";
-        gsap.set(container, { yPercent: 0 });
+
+        // Appear from top
+        gsap.fromTo(container,
+            { yPercent: -100 },
+            { yPercent: 0, duration: 0.8, ease: "power4.out" }
+        );
         gsap.set(text, { y: 0, opacity: 1 });
 
         let iteration = 0;
@@ -51,7 +56,7 @@ export default function Loader() {
                     clearInterval(interval);
                     setTimeout(() => {
                         finishLoading();
-                    }, 800);
+                    }, 400);
                 }
 
                 iteration += 1 / 3;
@@ -73,16 +78,16 @@ export default function Loader() {
             });
 
             tl.to(text, {
-                y: -50,
+                y: 50,
                 opacity: 0,
-                duration: 0.8,
+                duration: 0.5,
                 ease: "power3.in"
             })
                 .to(container, {
-                    yPercent: -100,
-                    duration: 1.2,
+                    yPercent: 100, // Slide down and reveal from top
+                    duration: 1,
                     ease: "power4.inOut"
-                }, "-=0.4");
+                }, "-=0.2");
         };
 
         return () => {

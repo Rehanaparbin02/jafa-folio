@@ -126,7 +126,7 @@ const ARTICLES_DATA: Record<string, any> = {
 export default function ArticlePage() {
     const params = useParams();
     const router = useRouter();
-    const { showLoader } = useLoader();
+    const { showLoader, isLoading } = useLoader();
     const slug = params.slug as string;
     const article = ARTICLES_DATA[slug];
 
@@ -161,7 +161,7 @@ export default function ArticlePage() {
                 <button
                     onClick={() => {
                         showLoader("RETURNING");
-                        setTimeout(() => router.push("/articles"), 100);
+                        setTimeout(() => router.push("/articles"), 500);
                     }}
                     className="pointer-events-auto h-12 px-6 rounded-full bg-white/5 backdrop-blur-md border border-white/10 flex items-center gap-2 hover:bg-white/10 transition-all group"
                 >
@@ -180,12 +180,12 @@ export default function ArticlePage() {
             </nav>
 
             {/* Hero Section */}
-            <section className="relative w-full h-[80vh] min-h-[600px] overflow-hidden">
+            <section className="relative w-full h-[80vh] min-h-[600px] overflow-hidden ">
                 <motion.div
                     initial={{ scale: 1.1, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 0.6 }}
+                    animate={!isLoading ? { scale: 1, opacity: 0.6 } : { scale: 1.1, opacity: 0 }}
                     transition={{ duration: 1.2, ease: "easeOut" }}
-                    className="absolute inset-0"
+                    className="absolute inset-0 "
                 >
                     <Image
                         src={article.image}
@@ -197,16 +197,16 @@ export default function ArticlePage() {
                 </motion.div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
 
-                <div className="absolute inset-0 flex flex-col justify-end max-w-5xl mx-auto px-6 pb-20 leading-tight">
+                <div className="absolute inset-0 flex flex-col justify-end max-w-5xl mx-auto px-6   leading-tight">
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        initial={{ opacity: 0, y: -30 }}
+                        animate={!isLoading ? { opacity: 1, y: 0 } : { opacity: 0, y: -30 }}
                         transition={{ delay: 0.3, duration: 0.8 }}
                     >
                         <span className="px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold uppercase tracking-widest border border-emerald-500/20 mb-8 inline-block">
                             {article.category}
                         </span>
-                        <h1 className={`${gondens.className} text-5xl md:text-8xl font-medium mb-8 leading-[1.3] md:leading-[1.2] uppercase tracking-tighter`}>
+                        <h1 className={`${gondens.className} text-5xl md:text-8xl font-medium mb-8 leading-[1.3] md:leading-[2.2] uppercase tracking-[2px]`}>
                             {article.title}
                         </h1>
 

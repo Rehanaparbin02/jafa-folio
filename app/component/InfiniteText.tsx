@@ -4,9 +4,13 @@ import { motion } from "framer-motion";
 import localFont from 'next/font/local'
 
 const gondens = localFont({ src: '../fonts/Gondens-DEMO.otf' })
+import { useLoader } from "../context/LoaderContext";
 
 const InfiniteText = () => {
     const text = "JAFAR'S DOMAIN";
+    const { isLoading } = useLoader();
+
+    if (isLoading) return null;
 
     return (
         <div className="absolute top-1/2 left-0 -translate-y-1/2 flex w-full overflow-hidden bg-transparent z-10 select-none pointer-events-none py-24">
