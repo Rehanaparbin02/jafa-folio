@@ -22,7 +22,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en" className={`${antonSC.variable} ${plusJakarta.variable}`}>
-            <body>
+            <body className="bg-black">
                 <LoaderProvider>
                     <Loader />
                     <CustomCursor />

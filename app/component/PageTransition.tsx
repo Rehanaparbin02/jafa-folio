@@ -13,7 +13,11 @@ export default function PageTransition({ children }: { children: React.ReactNode
                 opacity: isLoading ? 0 : 1,
                 y: isLoading ? -50 : 0
             }}
-            transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+            transition={{
+                duration: isLoading ? 0 : 0.6,
+                ease: [0.76, 0, 0.24, 1],
+                delay: 0
+            }}
         >
             {children}
         </motion.div>

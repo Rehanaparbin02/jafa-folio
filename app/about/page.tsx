@@ -87,7 +87,7 @@ export default function Page() {
     }, [isLoading]);
 
     return (
-        <div ref={containerRef} className="min-h-screen w-full bg-black text-white selection:bg-zinc-100 selection:text-black">
+        <div ref={containerRef} className="min-h-screen bg-black text-white font-sans bg-noise selection:bg-emerald-500/30 selection:text-emerald-400">
             {/* Vanta NET Background */}
             <Background />
 
@@ -108,7 +108,7 @@ export default function Page() {
                     >
                         ABOUT
                     </h1>
-                    <p className="text-2xl tracking-[0.5em] text-green-500 sm:text-3xl uppercase font-jakarta font-bold -mt-4">
+                    <p className="text-4xl tracking-[0.5em] text-green-500 sm:text-4xl uppercase font-jakarta font-bold -mt-4">
                         Jafar Sarif
                     </p>
                 </motion.div>
