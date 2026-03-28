@@ -21,7 +21,7 @@ export default function Home() {
       <div className="w-full h-screen relative overflow-hidden">
         <InfiniteText />
         <div className="relative z-20 w-full h-full">
-          <IdCard />
+          {/* <IdCard /> */}
         </div>
       </div>
     </div>

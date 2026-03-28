@@ -7,7 +7,7 @@ const gondens = localFont({ src: '../fonts/Gondens-DEMO.otf' })
 import { useLoader } from "../context/LoaderContext";
 
 const InfiniteText = () => {
-    const text = "JAFAR'S DOMAIN";
+    const text = " JAFAR'S DOMAIN ❇";
     const { isLoading } = useLoader();
 
     if (isLoading) return null;
@@ -33,7 +33,7 @@ const InfiniteText = () => {
                         key={i}
                         className={`${gondens.className} text-8xl md:text-[12rem] px-12 tracking-wide uppercase leading-none`}
                         style={{
-                            WebkitTextStroke: '8px #041a04b3',
+                            WebkitTextStroke: '8px #c3fac3b3',
                             color: 'transparent',
                         }}
                     >
