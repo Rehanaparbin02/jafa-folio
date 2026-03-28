@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import InfiniteText from "./component/InfiniteText"
+import Background from "./component/Background"
 
 // Dynamic import with no SSR
 const IdCard = dynamic(() => import('./component/IdCard'), {
@@ -18,11 +19,12 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-black font-sans bg-noise overflow-x-hidden">
       {/* 3D Badge Section */}
       {/* 3D Badge Section */}
+      <Background />
       <div className="w-full h-screen relative overflow-hidden">
         <InfiniteText />
-        <div className="relative z-20 w-full h-full">
-          {/* <IdCard /> */}
-        </div>
+        {/* <div className="relative z-20 w-full h-full">
+          <IdCard />
+        </div> */}
       </div>
     </div>
   )

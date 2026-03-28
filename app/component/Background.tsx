@@ -66,5 +66,5 @@ export default function Background() {
         };
     }, []);
 
-    return <div ref={vantaRef} className="fixed inset-0 z-0 -translate-y-100 opacity-80" />;
+    return <div ref={vantaRef} className="fixed inset-0 z-0 opacity-80" />;
 }

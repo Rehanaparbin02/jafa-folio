@@ -33,7 +33,7 @@ const InfiniteText = () => {
                         key={i}
                         className={`${gondens.className} text-8xl md:text-[12rem] px-12 tracking-wide uppercase leading-none`}
                         style={{
-                            WebkitTextStroke: '8px #c3fac3b3',
+                            WebkitTextStroke: '8px rgba(255, 255, 255, 1)',
                             color: 'transparent',
                         }}
                     >
